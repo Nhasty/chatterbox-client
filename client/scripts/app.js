@@ -24,13 +24,27 @@ var App = {
   },
 
   fetch: function(callback = ()=>{}) {
+    setTimeout(App.fetch, 3000);
     Parse.readAll((data) => {
       // examine the response from the server request:
+      //iterate over data
+      var lastChat = 0;
+      if (Messages._data.length) {
+        lastChat = Messages._data[0]['message_id'];
+      }
+      data.forEach((dataPoint) => {
+        //push each object to Messages._data
+        if (dataPoint['message_id'] > lastChat) {
+          Messages._data.push(dataPoint);
+        }
+      });
+
       console.log(data);
 
       // TODO: Use the data to update Messages and Rooms
       // and re-render the corresponding views.
     });
+    callback();
   },
 
   startSpinner: function() {
